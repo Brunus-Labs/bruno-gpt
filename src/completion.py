@@ -1,20 +1,18 @@
-from enum import Enum
 from dataclasses import dataclass
-import openai
-from src.moderation import moderate_message
-from typing import Optional, List
-from src.constants import (
-    BOT_INSTRUCTIONS,
-    BOT_NAME,
-    EXAMPLE_CONVOS,
-)
+from enum import Enum
+from typing import List, Optional
+
 import discord
-from src.base import Message, Prompt, Conversation
-from src.utils import split_into_shorter_messages, close_thread, logger
+
+import openai
+from src.base import Conversation, Message, Prompt
+from src.constants import BOT_INSTRUCTIONS, BOT_NAME, EXAMPLE_CONVOS
+from src.moderation import moderate_message
 from src.moderation import (
-    send_moderation_flagged_message,
     send_moderation_blocked_message,
+    send_moderation_flagged_message,
 )
+from src.utils import close_thread, logger, split_into_shorter_messages
 
 MY_BOT_NAME = BOT_NAME
 MY_BOT_EXAMPLE_CONVOS = EXAMPLE_CONVOS
@@ -53,7 +51,7 @@ async def generate_completion_response(
             prompt=rendered,
             temperature=1.0,
             top_p=0.9,
-            max_tokens=512,
+            max_tokens=2048,
             stop=["<|endoftext|>"],
         )
         reply = response.choices[0].text.strip()
